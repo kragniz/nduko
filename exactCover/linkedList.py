@@ -7,6 +7,8 @@ class LinkedList(object):
 class Node(object):
     def __main__(self):
         pass
+    def next(self):
+        return self
 
 if __name__ == '__main__':
     print 'doing something cool with linked lists'
