@@ -8,10 +8,12 @@ class Matrix(object):
         except KeyError:
             self.dataStructure[c] = {r:value}
 
-    def test(self):
-        pass 
+    def getItem(self, r, c):
+        return self.dataStructure[c][r]
+        
 
 if __name__ == '__main__':
     m = Matrix()
     #sets the item in row 0, column 0 to 1
     m.setItem(0, 0, 1)
+    print m.getItem(0, 0)
