@@ -3,26 +3,42 @@ import random
 
 class Matrix(object):
     def __init__(self):
-        self.dataStructure = {}
+        self._dataStructure = {}
 
     def __str__(self):
-        return str(self.dataStructure)
+        return str(self._dataStructure)
+
+    def __iter__(self):
+        return iter(self._dataStructure)
+
+    def __len__(self):
+        return len(self._dataStructure)
         
     def setItem(self, r, c, value):
         try:
-            self.dataStructure[c][r] = value 
+            self._dataStructure[c][r] = value 
         except KeyError:
-            self.dataStructure[c] = {r:value}
+            self._dataStructure[c] = {r:value}
+
+    def setColumn(self, c, column):
+        self._dataStructure[c] = column
+
+    def column(self, c):
+        return self._dataStructure[c]
 
     def getItem(self, r, c):
-        return self.dataStructure[c][r]
+        return self._dataStructure[c][r]
 
     def removeColumn(self, c):
-        return None
+        newMatrix = Matrix() 
+        for k in self:
+            if k != c:
+                newMatrix.setColumn(k, self.column(c))
+        return newMatrix
 
     def addRandomColumn(self):
         column = [random.randint(0, 1) for i in range(5)]
-        self.dataStructure[len(self.dataStructure) + 1] = [column]
+        self.setColumn(len(self) + 1, column)
 
 if __name__ == '__main__':
     m = Matrix()
@@ -34,4 +50,5 @@ if __name__ == '__main__':
     #add 5 random columns
     for i in range(5):
         m.addRandomColumn()
-    print m 
+    print 'initial state:', m 
+    print 'removed column 2', m.removeColumn(2)
