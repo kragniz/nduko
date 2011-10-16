@@ -17,6 +17,9 @@ class Matrix(object):
     def __len__(self):
         '''Return the length (in columns) of the matrix'''
         return len(self._dataStructure)
+
+    def __getitem__(self, c):
+        return self.column(c)
         
     def setItem(self, r, c, value):
         '''Set the value of the item in the column c and the row r to the value
@@ -44,7 +47,15 @@ class Matrix(object):
         newMatrix = Matrix() 
         for k in self:
             if k != c:
-                newMatrix.setColumn(k, self.column(c))
+                newMatrix.setColumn(k, self.column(k))
+        return newMatrix
+
+    def removeRow(self, r):
+        '''Return a copy of the matrix with the row r removed'''
+        newMatrix = Matrix()
+        for c in self:
+            newMatrix.setColumn(c, self.column(c))
+            del newMatrix[c][r]
         return newMatrix
 
     def addRandomColumn(self):
@@ -65,3 +76,4 @@ if __name__ == '__main__':
         m.addRandomColumn()
     print 'initial state:', m 
     print 'removed column 2', m.removeColumn(2)
+    print 'removed row 2', m.removeRow(2)
