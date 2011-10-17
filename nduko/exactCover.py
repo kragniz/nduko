@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import matrix
+from matrix import Matrix
 from random import choice
 
 class ExactCover(object):
     def __init__(self):
-        self._matrix = matrix.Matrix()
+        self._matrix = Matrix()
         for i in range(5):
             self._matrix.addRandomColumn()
 
@@ -15,14 +15,17 @@ class ExactCover(object):
             #we have completed the problem, return the result
             return A
         else:
+            solution = []
+            
             c = A.column(A.columns()[0])
             rows = []
             for r in range(len(c)):
-                print r
                 if c[r] == 1:
                     print self.matrix().row(r)
                     rows += [r]
-            print choice(rows)
+                    
+            if len(rows):
+                solution = self.matrix().row(choice(rows))
                         
     def matrix(self):
         return self._matrix
