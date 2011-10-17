@@ -44,6 +44,7 @@ class Matrix(object):
         return [self[c][r] for c in self]
 
     def columns(self):
+        '''Return the names of each column'''
         return self._dataStructure.keys()
 
     def getItem(self, r, c):

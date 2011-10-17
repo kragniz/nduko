@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import matrix
+from random import choice
 
 class ExactCover(object):
     def __init__(self):
@@ -14,8 +15,14 @@ class ExactCover(object):
             #we have completed the problem, return the result
             return A
         else:
-            C = A.column(A.columns()[0])
-            print C
+            c = A.column(A.columns()[0])
+            rows = []
+            for r in range(len(c)):
+                print r
+                if c[r] == 1:
+                    print self.matrix().row(r)
+                    rows += [r]
+            print choice(rows)
                         
     def matrix(self):
         return self._matrix
