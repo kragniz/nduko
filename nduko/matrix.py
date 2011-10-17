@@ -19,6 +19,7 @@ class Matrix(object):
         return len(self._dataStructure)
 
     def __getitem__(self, c):
+        '''Return the column c'''
         return self.column(c)
         
     def setItem(self, r, c, value):
@@ -37,6 +38,10 @@ class Matrix(object):
     def column(self, c):
         '''Return the column c'''
         return self._dataStructure[c]
+    
+    def row(self, r):
+        '''Return the row r'''
+        return [self[c][r] for c in self]
 
     def getItem(self, r, c):
         '''Return the value of the item at column c and row r'''
@@ -61,7 +66,7 @@ class Matrix(object):
     def addRandomColumn(self):
         '''Add a column full of random 1s and 0s (used for testing)'''
         column = [random.randint(0, 1) for i in range(5)]
-        self.setColumn(len(self) + 1, column)
+        self.setColumn(len(self), column)
 
 if __name__ == '__main__':
     '''Do some self testing'''
@@ -77,3 +82,5 @@ if __name__ == '__main__':
     print 'initial state:', m 
     print 'removed column 2', m.removeColumn(2)
     print 'removed row 2', m.removeRow(2)
+    print 'row 0', m.row(0)
+    print 'column 0', m.column(0)
