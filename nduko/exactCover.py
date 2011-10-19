@@ -17,12 +17,9 @@ class ExactCover(object):
             #we have completed the problem, return the result
             return A
         else:
-<<<<<<< Updated upstream
             solution = []
             
-=======
             #Otherwise choose a column c (deterministically).
->>>>>>> Stashed changes
             c = A.column(A.columns()[0])
             rows = []
             #Choose a row r such that A(r, c) = 1
@@ -31,15 +28,13 @@ class ExactCover(object):
                     print self.matrix().row(r)
                     #Include row r in the partial solution.
                     rows += [r]
-<<<<<<< Updated upstream
                     
             if len(rows):
                 solution = self.matrix().row(choice(rows))
-=======
+
             print choice(rows)
             #For each column j such that A(r, j) = 1,
             for j in 
->>>>>>> Stashed changes
                         
     def matrix(self):
         return self._matrix
