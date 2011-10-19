@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from matrix import Matrix
-from random import choice
+import random
 
 class ExactCover(object):
     def __init__(self):
@@ -26,15 +26,24 @@ class ExactCover(object):
             for r in range(len(c)):
                 if c[r] == 1:
                     print self.matrix().row(r)
-                    #Include row r in the partial solution.
                     rows += [r]
-                    
+                 
+            #Include row r in the partial solution, if a solution
+            #exists.
             if len(rows):
-                solution = self.matrix().row(choice(rows))
+                r = random.randint(0, len(rows))
+                print 'r =', r
+                solution = self.matrix().row(r)
 
-            print choice(rows)
             #For each column j such that A(r, j) = 1,
-            for j in 
+            for j in A.columns():
+                columnj = A[j]
+                if columnj[r] == 1:
+                    print columnj
+                    for i in range(len(columnj)):
+                        if columnj[i] == 1:
+                            NewA = A.removeRow(i)
+
                         
     def matrix(self):
         return self._matrix
