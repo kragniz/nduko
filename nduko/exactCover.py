@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from matrix import Matrix
+from copy import copy
 import random
 
 class ExactCover(object):
@@ -40,9 +41,16 @@ class ExactCover(object):
                 columnj = A[j]
                 if columnj[r] == 1:
                     print columnj
+                    #for each row i such that Ai, j = 1
                     for i in range(len(columnj)):
                         if columnj[i] == 1:
-                            NewA = A.removeRow(i)
+                            #delete row i from matrix A
+                            A = A.removeRow(i)
+                    #delete column j from matrix A
+                    A = NewA.removeColumn(j)
+
+            #Repeat this algorithm recursively on the reduced matrix A.
+            return self.solve(A)
 
                         
     def matrix(self):
