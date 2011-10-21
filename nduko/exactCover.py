@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from matrix import Matrix
-from copy import copy
 import random
 
 class ExactCover(object):
@@ -10,7 +9,7 @@ class ExactCover(object):
         for i in range(5):
             self._matrix.addRandomColumn()
 
-    def solve(self, A):
+    def solve(self, A, depth=-1):
         '''Solve the exact cover problem on the matrix A'''
         #If the matrix A is empty, the problem is solved; terminate
         #successfully.
@@ -19,7 +18,9 @@ class ExactCover(object):
             return A
         else:
             solution = []
-            
+            depth += 1 
+            print 'recursion depth:', depth 
+
             #Otherwise choose a column c (deterministically).
             c = A.column(A.columns()[0])
             rows = []
@@ -43,14 +44,17 @@ class ExactCover(object):
                     print columnj
                     #for each row i such that Ai, j = 1
                     for i in range(len(columnj)):
-                        if columnj[i] == 1:
-                            #delete row i from matrix A
-                            A = A.removeRow(i)
+                        #print 'i =', i, 'A[%s]' % i, '=', columnj
+                        
+                        if i < len(columnj):
+                            if columnj[i] == 1:
+                                #delete row i from matrix A
+                                A = A.removeRow(i)
                     #delete column j from matrix A
-                    A = NewA.removeColumn(j)
+                    A = A.removeColumn(j)
 
             #Repeat this algorithm recursively on the reduced matrix A.
-            return self.solve(A)
+            return self.solve(A, depth)
 
                         
     def matrix(self):
