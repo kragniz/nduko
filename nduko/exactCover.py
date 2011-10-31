@@ -9,6 +9,10 @@ class ExactCover(object):
         for i in range(5):
             self._matrix.addRandomColumn()
 
+
+    def loadFromFile(self, filename):
+        coverProblem 
+
     def solve(self, A, depth=-1):
         '''Solve the exact cover problem on the matrix A'''
         #If the matrix A is empty, the problem is solved; terminate
@@ -19,7 +23,9 @@ class ExactCover(object):
         else:
             solution = []
             depth += 1 
-            print 'recursion depth:', depth 
+            if depth > 1000:
+                return A
+            print 'at recursion depth:', depth, 'A:', A
 
             #Otherwise choose a column c (deterministically).
             c = A.column(A.columns()[0])
@@ -27,31 +33,32 @@ class ExactCover(object):
             #Choose a row r such that A(r, c) = 1
             for r in range(len(c)):
                 if c[r] == 1:
-                    print self.matrix().row(r)
+                    #print self.matrix().row(r)
                     rows += [r]
                  
             #Include row r in the partial solution, if a solution
             #exists.
             if len(rows):
                 r = random.randint(0, len(rows))
-                print 'r =', r
+                #print 'r =', r
                 solution = self.matrix().row(r)
 
             #For each column j such that A(r, j) = 1,
             for j in A.columns():
                 columnj = A[j]
-                if columnj[r] == 1:
-                    print columnj
-                    #for each row i such that Ai, j = 1
-                    for i in range(len(columnj)):
-                        #print 'i =', i, 'A[%s]' % i, '=', columnj
+                if r < len(columnj):
+                    if columnj[r] == 1:
+                        #print columnj
+                        #for each row i such that Ai, j = 1
+                        for i in range(len(columnj)):
+                            #print 'i =', i, 'A[%s]' % i, '=', columnj
                         
-                        if i < len(columnj):
-                            if columnj[i] == 1:
-                                #delete row i from matrix A
-                                A = A.removeRow(i)
-                    #delete column j from matrix A
-                    A = A.removeColumn(j)
+                            if i < len(columnj):
+                                if columnj[i] == 1:
+                                    #delete row i from matrix A
+                                    A = A.removeRow(i)
+                        #delete column j from matrix A
+                        A = A.removeColumn(j)
 
             #Repeat this algorithm recursively on the reduced matrix A.
             return self.solve(A, depth)
@@ -62,5 +69,8 @@ class ExactCover(object):
 
 if __name__ == '__main__':
     X = ExactCover()
-    print X.matrix()
-    print X.solve(X.matrix())
+    #print X.matrix()
+    try:
+        print X.solve(X.matrix())
+    except:
+        print 'cannot solve'
