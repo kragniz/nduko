@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 import random
+import json
+import pprint as pp
 
 class Matrix(object):
     '''A class representing a simple matrix'''
+    rowsTaken = {}
     def __init__(self):
         self._dataStructure = {}
 
     def __str__(self):
         '''Return the string representation of the matrix'''
-        return str(self._dataStructure)
+        return pp.pformat(self._dataStructure)
 
     def __iter__(self):
         '''Return an iter object for the matrix'''
@@ -69,8 +72,19 @@ class Matrix(object):
 
     def addRandomColumn(self):
         '''Add a column full of random 1s and 0s (used for testing)'''
-        column = [random.randint(0, 1) for i in range(5)]
+        column = [0 for i in range(5)]
+        #do a bit of a hack
+        c = random.randint(0, len(column))
+        while c in self.rowsTaken:
+            self.rowsTaken[random.randint(0, len(column))] = 1
+        column[c] = 1
+        #column[] = 1
         self.setColumn(len(self), column)
+
+    def load(self, filename):
+        '''Load the data stored in filename as json'''
+        with open(filename) as f:
+            self._dataStructure = json.load(f)
 
 if __name__ == '__main__':
     '''Do some self testing'''
