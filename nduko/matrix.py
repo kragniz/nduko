@@ -39,12 +39,12 @@ class Matrix(object):
         self._dataStructure[c] = column
 
     def column(self, c):
-        '''Return the column c'''
-        return self._dataStructure[c]
-    
-    def row(self, r):
         '''Return the row r'''
         return [self[c][r] for c in self]
+    
+    def row(self, r):
+        '''Return the column c'''
+        return self._dataStructure[c]
 
     def columns(self):
         '''Return the names of each column'''
