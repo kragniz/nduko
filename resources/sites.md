@@ -6,3 +6,4 @@ Some websites which may or may not be helpful for implementing Algorithm X
 * <http://www.cs.mcgill.ca/~aassaf9/python/sudoku.txt>
 * <http://en.wikipedia.org/wiki/Exact_cover>
 * <http://www.ams.org/samplings/feature-column/fcarc-kanoodle>
+* <http://arxiv.org/PS_cache/arxiv/pdf/1010/1010.5890v1.pdf>
