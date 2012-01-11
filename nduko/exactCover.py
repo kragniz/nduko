@@ -1,97 +1,110 @@
 #!/usr/bin/env python
 
 from matrix import Matrix
-import random
 import pprint as pp
 
 class ExactCover(object):
     def __init__(self):
-        self._matrix = Matrix()
-        self.solution = []
-        #self._rows = []
-        #for i in range(5):
-        #    self._matrix.addRandomColumn()
+        self._matrix = []
+        self.solution = {}
+        self.coveredColumns = {}
+        self.updates = {}
 
     def __str__(self):
-        return pp.pprint(self._matrix)
+        return pp.pformat(self._matrix)
 
     def load(self, filename):
-        '''Wrapper for Matrix.load'''
-        self._matrix.load(filename)
-
-    def solve(self, A, depth=-1):
-        '''Solve the exact cover problem on the matrix A'''
-        #If the matrix A is empty, the problem is solved; terminate
-        #successfully.
-        print '###################'
-        print A
-        if len(A) == 0:
-            #we have completed the problem, return the result
-            return True
-
-        #Otherwise choose a column c (deterministically) as the column with
-        #the smallest number of 1s. Return False if any column has no 1s.
-        c = A.column(A.columns()[0])
-        smallest = 0
-        for i in A:
-            columnSum = sum(A[i])
-            if columnSum == 0:
-                print A[i], 'has no 1s'
-                return False
-            else:
-                if columnSum > smallest:
-                    smallest = i
-                    c = A.column(A.columns()[int(i)])
-
-        print 'c:', c
-        rows = []
-        #Choose a row r such that A(r, c) = 1
-        for i, r in enumerate(c):
-            if r == 1:
-                rows += [i]
-        print 'r:', rows
-             
-        #Include row r in the partial solution, if a solution
-        #exists.
-        if len(rows):
-            r = random.randint(0, len(rows))
-            #print 'r =', r
-            self.solution += [rows[r-1]]
-
-        #For each column j such that A(r, j) = 1,
-        for j in A.columns():
-            columnj = A[j]
-            if r < len(columnj):
-                print 'columnj:', columnj, columnj[r]
-                if columnj[r] == 1:
-                    print 'r == 1'
-                    #print columnj
-                    #for each row i such that Ai, j = 1
-                    for i in range(len(columnj)):
-                        #print 'i =', i, 'A[%s]' % i, '=', columnj
+        '''Read in a matrix reperesenting the exact cover problem'''
+        with open(filename,"r") as f:
+            self._matrix = []
+            row = 0
+            for line in f:
+                row = row + 1
+                for col in line.split():
+                    self._matrix.append((row, col))
                     
-                        if i < len(columnj):
-                            if columnj[i] == 1:
-                                #delete row i from matrix A
-                                A = A.removeRow(i)
-                    #delete column j from matrix A
-                    A = A.removeColumn(j)
+        for (r, c) in self._matrix:
+            self.coveredColumns[c] = False
 
 
-        print 'at recursion depth:', depth, 'A:', A
-        print 'current solution:', self.solution
+    def __chooseColumn(self):
+        """Return the column with the smallest number of rows which is uncoverd"""
+        columns = [c for c in self.coveredColumns if not self.coveredColumns[c]]
 
-        #Repeat this algorithm recursively on the reduced matrix A.
-        return self.solve(A, depth)
+        # columns may possibly have no rows
+        tmp = dict([(c, 0) for c in columns])
+        for (r, c) in self._matrix:
+            if c in columns:
+                tmp[c] = tmp[c] + 1
+
+        print columns
+        minColumn = columns[0]
+        for c in columns:
+            if tmp[c] < tmp[minColumn]:
+                minColumn = c
+        return minColumn
+
+    def solve(self, k):
+        '''Solve the exact cover problem'''
+        #If the matrix is empty, the problem is solved; terminate
+        #successfully.
+        if not self._matrix:
+            for c in self.coveredColumns:
+                if not self.coveredColumns[c]:
+                    return
+            print self._matrix
+            return
+
+        #otherwise choose a column c (deterministically)
+        c = self.__chooseColumn()
+        #choose a row r such that matrix(r, c) = 1
+        rows = [node[0] for node in self._matrix if node[1]==c]
+        if not rows:
+            return
+        for r in rows:
+            box = [] #a place for temporaly removed rows
+            #include row r in the partial solution, if a solution
+            #exists.
+            self.solution[k] = [node for node in self._matrix if node[0]==r]
+            # Remove row r from matrix.
+            for node in self.solution[k]:
+                box.append(node)
+                self._matrix.remove(node)
+                self.updates[k] = self.updates.get(k,0) + 1
+            
+            #For each column j such that matrix(r, j) = 1,
+            cols = [node[1] for node in self.solution[k]]
+            for j in cols:
+                self.coveredColumns[j] = True
+                #choose rows i such that matrix(i,j) = 1.
+                rows2 = [node[0] for node in self._matrix if node[1] == j]
+                #delete row i from matrix
+                tmp = [node for node in self._matrix if node[0] in rows2]
+                for node in tmp:
+                    box.append(node)
+                    self._matrix.remove(node)
+                    self.updates[k] = self.updates.get(k,0) + 1
+            #do some recursion
+            self.solve(k + 1)
+
+            #restore deleted rows.
+            for node in box:
+                self._matrix.append(node)
+            del box
+            del self.solution[k]
+            #uncover columns.
+            for j in cols:
+                self.coveredColumns[j] = False
+        return
 
     def matrix(self):
         return self._matrix
 
 if __name__ == '__main__':
     X = ExactCover()
-    X.load('../data/placement.json')
+    X.load('../data/placement')
     print X.matrix()
     try:
-        print X.solve(X.matrix())
+        print X.solve(0)
     except RuntimeError:
         print 'cannot solve'

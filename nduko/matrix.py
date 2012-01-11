@@ -38,11 +38,11 @@ class Matrix(object):
         be a List'''
         self._dataStructure[c] = column
 
-    def column(self, c):
+    def column(self, r):
         '''Return the row r'''
         return [self[c][r] for c in self]
     
-    def row(self, r):
+    def row(self, c):
         '''Return the column c'''
         return self._dataStructure[c]
 
