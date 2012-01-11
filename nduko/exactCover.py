@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python -O
 import pprint as pp
 
 class ExactCover(object):
@@ -9,10 +9,9 @@ class ExactCover(object):
         self.updates = {}
 
     def __str__(self):
-        value = str(self.updates) + '\n'
+        value = ''
         for k in self.solution:
-            for node in self.solution[k]:
-                value += str(node[1]) + '\n'
+            value += str(self.solution[k]) + '\n'
         return value
 
     def load(self, filename):
@@ -23,7 +22,7 @@ class ExactCover(object):
             for line in f:
                 row = row + 1
                 for col in line.split():
-                    self._matrix.append((row, col))
+                    self._matrix.append((row, int(col)))
 
         for (r, c) in self._matrix:
             self.coveredColumns[c] = False
@@ -65,15 +64,16 @@ class ExactCover(object):
             box = [] #a place for temporaly removed rows
             #include row r in the partial solution, if a solution
             #exists.
-            self.solution[k] = [node for node in self._matrix if node[0]==r]
+            solution = [node for node in self._matrix if node[0] == r]
+            self.solution[k] = solution[1][1]
             # Remove row r from matrix.
-            for node in self.solution[k]:
+            for node in solution:
                 box.append(node)
                 self._matrix.remove(node)
                 self.updates[k] = self.updates.get(k,0) + 1
             
             #For each column j such that matrix(r, j) = 1,
-            cols = [node[1] for node in self.solution[k]]
+            cols = [node[1] for node in solution]
             for j in cols:
                 self.coveredColumns[j] = True
                 #choose rows i such that matrix(i,j) = 1.
@@ -101,6 +101,6 @@ if __name__ == '__main__':
     X = ExactCover()
     X.load('../data/placement')
     try:
-        X.solve(0)
+        print X.solve(0)
     except RuntimeError:
         print 'cannot solve'
