@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-
-from matrix import Matrix
 import pprint as pp
 
 class ExactCover(object):
@@ -11,7 +9,11 @@ class ExactCover(object):
         self.updates = {}
 
     def __str__(self):
-        return pp.pformat(self._matrix)
+        value = str(self.updates) + '\n'
+        for k in self.solution:
+            for node in self.solution[k]:
+                value += str(node[1]) + '\n'
+        return value
 
     def load(self, filename):
         '''Read in a matrix reperesenting the exact cover problem'''
@@ -22,10 +24,9 @@ class ExactCover(object):
                 row = row + 1
                 for col in line.split():
                     self._matrix.append((row, col))
-                    
+
         for (r, c) in self._matrix:
             self.coveredColumns[c] = False
-
 
     def __chooseColumn(self):
         """Return the column with the smallest number of rows which is uncoverd"""
@@ -37,7 +38,6 @@ class ExactCover(object):
             if c in columns:
                 tmp[c] = tmp[c] + 1
 
-        print columns
         minColumn = columns[0]
         for c in columns:
             if tmp[c] < tmp[minColumn]:
@@ -52,7 +52,7 @@ class ExactCover(object):
             for c in self.coveredColumns:
                 if not self.coveredColumns[c]:
                     return
-            print self._matrix
+            print self
             return
 
         #otherwise choose a column c (deterministically)
@@ -97,14 +97,10 @@ class ExactCover(object):
                 self.coveredColumns[j] = False
         return
 
-    def matrix(self):
-        return self._matrix
-
 if __name__ == '__main__':
     X = ExactCover()
     X.load('../data/placement')
-    print X.matrix()
     try:
-        print X.solve(0)
+        X.solve(0)
     except RuntimeError:
         print 'cannot solve'
