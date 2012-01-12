@@ -47,60 +47,72 @@ class ExactCover(object):
         '''Solve the exact cover problem'''
         #If the matrix is empty, the problem is solved; terminate
         #successfully.
+        print 'at place', 8
         if not self._matrix:
+            print 'at place', 9
             for c in self.coveredColumns:
                 if not self.coveredColumns[c]:
-                    return
+                    return True
             print self
-            return
+            return True
 
-        #otherwise choose a column c (deterministically)
-        c = self.__chooseColumn()
-        #choose a row r such that matrix(r, c) = 1
-        rows = [node[0] for node in self._matrix if node[1]==c]
-        if not rows:
-            return
-        for r in rows:
-            box = [] #a place for temporaly removed rows
-            #include row r in the partial solution, if a solution
-            #exists.
-            solution = [node for node in self._matrix if node[0] == r]
-            self.solution[k] = solution[1][1]
-            # Remove row r from matrix.
-            for node in solution:
-                box.append(node)
-                self._matrix.remove(node)
-                self.updates[k] = self.updates.get(k,0) + 1
-            
-            #For each column j such that matrix(r, j) = 1,
-            cols = [node[1] for node in solution]
-            for j in cols:
-                self.coveredColumns[j] = True
-                #choose rows i such that matrix(i,j) = 1.
-                rows2 = [node[0] for node in self._matrix if node[1] == j]
-                #delete row i from matrix
-                tmp = [node for node in self._matrix if node[0] in rows2]
-                for node in tmp:
+        else:
+            print 'at place', 1
+            #otherwise choose a column c (deterministically)
+            c = self.__chooseColumn()
+            #choose a row r such that matrix(r, c) = 1
+            rows = [node[0] for node in self._matrix if node[1]==c]
+            if not rows:
+                return False
+
+            for r in rows:
+                print 'at place', 2
+                box = [] #a place for temporaly removed rows
+                #include row r in the partial solution, if a solution
+                #exists.
+                solution = [node for node in self._matrix if node[0] == r]
+                self.solution[k] = solution[1][1]
+                # Remove row r from matrix.
+                for node in solution:
+                    print 'at place', 3
                     box.append(node)
                     self._matrix.remove(node)
                     self.updates[k] = self.updates.get(k,0) + 1
-            #do some recursion
-            self.solve(k + 1)
+                
+                #For each column j such that matrix(r, j) = 1,
+                cols = [node[1] for node in solution]
+                for j in cols:
+                    print 'at place', 4
+                    self.coveredColumns[j] = True
+                    #choose rows i such that matrix(i,j) = 1.
+                    rows2 = [node[0] for node in self._matrix if node[1] == j]
+                    #delete row i from matrix
+                    tmp = [node for node in self._matrix if node[0] in rows2]
+                    for node in tmp:
+                        box.append(node)
+                        self._matrix.remove(node)
+                        self.updates[k] = self.updates.get(k,0) + 1
 
-            #restore deleted rows.
-            for node in box:
-                self._matrix.append(node)
-            del box
-            del self.solution[k]
-            #uncover columns.
-            for j in cols:
-                self.coveredColumns[j] = False
-        return
+                #do some recursion
+                print 'at place', 5
+                self.solve(k + 1)
+                print 'at place', 6
+
+                #restore deleted rows.
+                for node in box:
+                    self._matrix.append(node)
+                del box
+                del self.solution[k]
+                #uncover columns.
+                for j in cols:
+                    self.coveredColumns[j] = False
+        print 'at place', 7
+        return True
 
 if __name__ == '__main__':
     X = ExactCover()
     X.load('../data/placement')
     try:
-        print X.solve(0)
+        X.solve(0)
     except RuntimeError:
         print 'cannot solve'
