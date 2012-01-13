@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ! -d ./trace ]
+    then
+        echo "File does not exist, creating it"
+        mkdir trace > /dev/null
+fi
+env python -m trace -t -c -g -C trace ./exactCover.py > ./trace/exactCover.trace

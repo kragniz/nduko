@@ -51,7 +51,9 @@ class ExactCover(object):
         if not self._matrix:
             print 'at place', 9
             for c in self.coveredColumns:
+                print 'at place', 10
                 if not self.coveredColumns[c]:
+                    print 'at place', 11
                     return True
             print self
             return True
