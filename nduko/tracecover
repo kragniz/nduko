@@ -7,4 +7,3 @@ fi
 env python -m trace -tcg -C trace ./exactCover.py > ./trace/exactCover.cover
 sed 's/\(\w\)\+\.\(\w\)\+ \(\w\)\+\.py(\(\w\)\+):/"&"/' <./trace/exactCover.cover >./trace/exactCover.py
 find . -name '*.cover' -print0 | xargs -0 rm
-#.\+\?: sort of works
