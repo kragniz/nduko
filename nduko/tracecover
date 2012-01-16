@@ -2,7 +2,9 @@
 
 if [ ! -d ./trace ]
     then
-        echo "./trace does not exist, creating it"
-        mkdir trace > /dev/null
+        mkdir ./trace > /dev/null
 fi
-env python -m trace -tcg -C trace ./exactCover.py > ./trace/exactCover.trace
+env python -m trace -tcg -C trace ./exactCover.py > ./trace/exactCover.cover
+sed 's/\(\w\)\+\.\(\w\)\+ \(\w\)\+\.py(\(\w\)\+):/"&"/' <./trace/exactCover.cover >./trace/exactCover.py
+find . -name '*.cover' -print0 | xargs -0 rm
+#.\+\?: sort of works
