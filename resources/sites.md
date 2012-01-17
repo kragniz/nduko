@@ -12,5 +12,6 @@ A few sites for writing widgets
 ===============================
 
 I'm using one of these as the base class for most of the rendered grid.
+
 * <http://www.pygtk.org/pygtk2tutorial/ch-DrawingArea.html>
 * <http://www.pygtk.org/docs/pygtk/class-gdkgc.html>
