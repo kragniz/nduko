@@ -19,8 +19,8 @@ class Grid(gtk.DrawingArea):
         return False
 
     def draw(self, context):
-    	rect = self.get_allocation()
-    	print rect.x, rect.y, rect.width, rect.height
+        rect = self.get_allocation()
+        print rect.x, rect.y, rect.width, rect.height
 
         x = rect.x + rect.width / 2
         y = rect.y + rect.height / 2
