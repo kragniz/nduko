@@ -20,7 +20,7 @@ class Grid(Gtk.DrawingArea):
 
     @property
     def height(self):
-        return self.rect.height
+    	return self.rect.height
 
     @property
     def x(self):
@@ -42,11 +42,15 @@ class Grid(Gtk.DrawingArea):
         return False
 
     def _draw_outline(self, context):
-        #context.set_source_rgb(1.0, 1.0, 0.72)
-        context.rectangle(self.x-30,
-                          self.y-30,
-                          self.width-30,
-                          self.height-30)
+        print self.width, self.height, self.x, self.y
+        context.rectangle(self.x+(self.width/4),
+                          self.y+(self.width/4),
+                          self.width-(self.width/4),
+                          self.width-(self.width/4))
+
+        context.set_line_width(4)
+        context.set_source_rgba(0, 0, 0, 0.25)
+        context.stroke()
         context.save()
         context.clip()
         context.paint()
@@ -54,8 +58,6 @@ class Grid(Gtk.DrawingArea):
 
 
     def draw(self, context):
-        print self.x, self.y, self.width, self.height
-
         context.set_line_width(3)
 
         x = self.x + self.width / 2
