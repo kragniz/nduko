@@ -1,10 +1,9 @@
 import math
-
 try:
     import gi
     from gi.repository import Gtk
 except:
-	#make gtk2 look like gtk3
+    #make gtk2 look like gtk3
     import gtk as Gtk
 
 class Grid(Gtk.DrawingArea):
@@ -12,31 +11,64 @@ class Grid(Gtk.DrawingArea):
         Gtk.DrawingArea.__init__(self)
         self.set_size_request(300, 300)
         self.connect('expose_event', self.expose)
-        self.drawable = self.window
+
+        self.rect = self.get_allocation()
+
+    @property
+    def width(self):
+        return self.rect.width
+
+    @property
+    def height(self):
+        return self.rect.height
+
+    @property
+    def x(self):
+        return self.rect.x
+
+    @property
+    def y(self):
+        return self.rect.y
 
     def expose(self, widget, event):
-    	self.context = widget.window.cairo_create()
+        self.context = widget.window.cairo_create()
+        self.rect = self.get_allocation()
 
         # speed up by setting a clip region for the expose event
-        self.context.rectangle(event.area.x, event.area.y,
-                               event.area.width, event.area.height)
+        self.context.rectangle(self.x, self.y,
+                               self.width, self.height)
         self.context.clip()
         self.draw(self.context)
         return False
 
+    def _draw_outline(self, context):
+        #context.set_source_rgb(1.0, 1.0, 0.72)
+        context.rectangle(self.x-30,
+                          self.y-30,
+                          self.width-30,
+                          self.height-30)
+        context.save()
+        context.clip()
+        context.paint()
+        context.restore()
+
+
     def draw(self, context):
-        rect = self.get_allocation()
-        print rect.x, rect.y, rect.width, rect.height
+        print self.x, self.y, self.width, self.height
 
-        x = rect.x + rect.width / 2
-        y = rect.y + rect.height / 2
+        context.set_line_width(3)
 
-        radius = min(rect.width / 2, rect.height / 2) - 5
+        x = self.x + self.width / 2
+        y = self.y + self.height / 2
+
+        radius = min(self.width / 2, self.height / 2) - 5
         context.arc(x, y, radius, 0, 2 * math.pi)
         context.set_source_rgb(1, 1, 1)
         context.fill_preserve()
         context.set_source_rgb(0, 0, 0)
         context.stroke()
+
+        self._draw_outline(context)
 
 if __name__ == '__main__':
     window = Gtk.Window()
