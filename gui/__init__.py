@@ -1,22 +1,15 @@
 import sys
 
-#we're only targeting gtk 2.31 at the moment.
-try:  
-    import pygtk  
-    pygtk.require('2.0')
-except:  
-    pass
-try:  
-    import gtk  
-    import gtk.glade  
-except:  
-    print('GTK 2.~ Not Availible')
-    sys.exit(1)
+try:
+    import gi
+    from gi.repository import Gtk
+except:
+    import gtk as Gtk
 
 class gui(object):
     def __init__( self ):
         gladeFile = "main.glade"
-        builder = gtk.Builder()
+        builder = Gtk.Builder()
         builder.add_from_file(gladeFile)
         builder.connect_signals(self)
 
@@ -41,4 +34,4 @@ class gui(object):
 
 if __name__ == '__main__':
 	g = gui()
-	gtk.main()
+	Gtk.main()
