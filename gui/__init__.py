@@ -9,7 +9,7 @@ except:
 
 class gui(object):
     def __init__( self ):
-        gladeFile = "main.glade"
+        gladeFile = 'main.ui'
         builder = Gtk.Builder()
         builder.add_from_file(gladeFile)
         builder.connect_signals(self)
