@@ -5,6 +5,7 @@ try:
     from gi.repository import Gtk
 except:
     import gtk as Gtk
+    print 'falling back to gtk 2'
 
 class gui(object):
     def __init__( self ):
@@ -13,8 +14,14 @@ class gui(object):
         builder.add_from_file(gladeFile)
         builder.connect_signals(self)
 
+        #get some widgets in the local namespace
+        self.aboutdialog = builder.get_object('aboutdialog')
+
     def on_undoButton_clicked(self, widget):
     	self.undo()
+
+    def on_aboutMenuitem_activate(self, widget):
+        self.aboutdialog.show()
 
     def on_quitmenuitem_activate(self, widget):
     	self.quit()

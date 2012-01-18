@@ -1,9 +1,15 @@
-import gtk
 import math
 
-class Grid(gtk.DrawingArea):
+try:
+    import gi
+    from gi.repository import Gtk
+except:
+	#make gtk2 look like gtk3
+    import gtk as Gtk
+
+class Grid(Gtk.DrawingArea):
     def __init__(self):
-        gtk.DrawingArea.__init__(self)
+        Gtk.DrawingArea.__init__(self)
         self.set_size_request(300, 300)
         self.connect('expose_event', self.expose)
         self.drawable = self.window
@@ -33,11 +39,11 @@ class Grid(gtk.DrawingArea):
         context.stroke()
 
 if __name__ == '__main__':
-    window = gtk.Window()
+    window = Gtk.Window()
     grid = Grid()
     
     window.add(grid)
-    window.connect('destroy', gtk.main_quit)
+    window.connect('destroy', Gtk.main_quit)
     window.show_all()
     
-    gtk.main()
+    Gtk.main()
