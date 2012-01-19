@@ -9,7 +9,7 @@ except:
 class Grid(Gtk.DrawingArea):
     def __init__(self):
         Gtk.DrawingArea.__init__(self)
-        self.set_size_request(300, 300)
+        self.set_size_request(16, 16)
         self.connect('expose_event', self.expose)
 
         self.rect = self.get_allocation()
@@ -42,13 +42,15 @@ class Grid(Gtk.DrawingArea):
         return False
 
     def _draw_outline(self, context):
-        print self.width, self.height, self.x, self.y
-        context.rectangle(self.x+(self.width/4),
-                          self.y+(self.width/4),
-                          self.width-(self.width/4),
-                          self.width-(self.width/4))
+        m1, m2 = (self.width + self.x) / 2, (self.height + self.y) / 2
+        width = min(self.width, self.height) / 1.05 #magic number.
 
-        context.set_line_width(4)
+        context.rectangle(m1-width/2,
+                          m2-width/2,
+                          width,
+                          width)
+
+        context.set_line_width(6)
         context.set_source_rgba(0, 0, 0, 0.25)
         context.stroke()
         context.save()
