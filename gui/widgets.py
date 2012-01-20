@@ -16,6 +16,7 @@ class Grid(Gtk.DrawingArea):
         self.rect = self.get_allocation()
 
         self._value = 0
+        self._selected = False
 
     @property
     def window_width(self):
@@ -78,18 +79,27 @@ class Grid(Gtk.DrawingArea):
 
         context.stroke()
 
-    def _draw_outline(self, context):
+    def _draw_square(self, context, fillColor = (1, 0, 0, 0.25),
+                                    strokeColor = (0, 0, 0, 0.25),
+                                    inset = 0,
+                                    fill = False,
+                                    stroke = True):
         m1, m2 = self._center
         width = self.width / 1.05 #magic number.
 
-        context.rectangle(m1-width/2,
-                          m2-width/2,
-                          width,
-                          width)
+        context.rectangle(m1-(width/2)+inset,
+                          m2-(width/2)+inset,
+                          width-inset*2,
+                          width-inset*2)
 
         context.set_line_width(self.width/20)
-        context.set_source_rgba(0, 0, 0, 0.25)
-        context.stroke()
+        if fill:
+            context.set_source_rgba(*fillColor)
+            context.fill_preserve()
+        if stroke:
+            context.set_source_rgba(*strokeColor)
+            context.stroke()
+
         context.save()
         context.clip()
         context.paint()
@@ -97,13 +107,13 @@ class Grid(Gtk.DrawingArea):
 
 
     def draw(self, context):
-        self._draw_outline(context)
+        self._draw_square(context, fill=True, stroke=True)
         self._draw_value(context)
 
 if __name__ == '__main__':
     window = Gtk.Window()
     grid = Grid()
-    grid.value = 10
+    grid.value = 99
     
     window.add(grid)
     window.connect('destroy', Gtk.main_quit)
