@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import math
 import cairo 
 try:
@@ -10,13 +12,21 @@ except:
 class Grid(Gtk.DrawingArea):
     def __init__(self):
         Gtk.DrawingArea.__init__(self)
-        self.set_size_request(16, 16)
+        self.set_size_request(19, 19)
+        events = {
+            'expose_event' : self.expose
+        }
         self.connect('expose_event', self.expose)
+        self.connect('button-press-event', self.on_button_press)
 
         self.rect = self.get_allocation()
 
         self._value = 0
         self._selected = False
+
+    def on_button_press(self, widget, event):
+        print 'hey there'
+        return True
 
     @property
     def window_width(self):
