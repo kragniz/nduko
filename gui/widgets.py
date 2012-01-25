@@ -12,21 +12,33 @@ except:
 class Grid(Gtk.DrawingArea):
     def __init__(self):
         Gtk.DrawingArea.__init__(self)
+        self.set_events(Gtk.gdk.BUTTON_PRESS_MASK
+                      | Gtk.gdk.POINTER_MOTION_MASK)
         self.set_size_request(19, 19)
-        events = {
-            'expose_event' : self.expose
-        }
+
         self.connect('expose_event', self.expose)
-        self.connect('button-press-event', self.on_button_press)
+        self.connect('button_press_event', self._on_button_press)
+        self.connect('motion_notify_event', self._on_motion_notify_event)
 
         self.rect = self.get_allocation()
 
         self._value = 0
         self._selected = False
 
-    def on_button_press(self, widget, event):
-        print 'hey there'
+    def _on_button_press(self, widget, event):
+        button = event.button 
+        if button == 1:
+            self.value += 1
+        else:
+            self.value -= 1
+        self.queue_draw_area(self.x,
+                             self.y,
+                             self.window_width,
+                             self.window_height)
         return True
+
+    def _on_motion_notify_event(self, width, event):
+        print 'mouse moved!', event.x, event.y
 
     @property
     def window_width(self):
@@ -123,7 +135,7 @@ class Grid(Gtk.DrawingArea):
 if __name__ == '__main__':
     window = Gtk.Window()
     grid = Grid()
-    grid.value = 99
+    grid.value = 0
     
     window.add(grid)
     window.connect('destroy', Gtk.main_quit)
