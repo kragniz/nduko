@@ -9,14 +9,16 @@ except:
     #make gtk2 look like gtk3
     import gtk as Gtk
 
-class Grid(Gtk.DrawingArea):
+class NdukoItem(Gtk.DrawingArea):
+    '''Class to draw a single item in an nduko grid. Holds and can change a
+    single value'''
     def __init__(self):
         Gtk.DrawingArea.__init__(self)
         self.set_events(Gtk.gdk.BUTTON_PRESS_MASK
                       | Gtk.gdk.POINTER_MOTION_MASK)
         self.set_size_request(19, 19)
 
-        self.connect('expose_event', self.expose)
+        self.connect('expose_event', self._on_expose_event)
         self.connect('button_press_event', self._on_button_press)
         self.connect('motion_notify_event', self._on_motion_notify_event)
 
@@ -50,29 +52,37 @@ class Grid(Gtk.DrawingArea):
 
     @property
     def x(self):
+        '''Return the x coordinate of the upper left corner of the DrawingArea'''
         return self.rect.x
 
     @property
     def y(self):
+        '''Return the y coordinate of the upper left corner of the DrawingArea'''
         return self.rect.y
 
     @property
     def width(self):
+        '''Return the width of the visable inner square'''
     	return min(self.window_width, self.window_height)
 
     @property
     def value(self):
+        '''Return the value of the item'''
     	return self._value
 
     @value.setter
     def value(self, value):
+        '''Set the value for the items'''
     	self._value = value
 
     @property
     def _center(self):
-    	return (self.window_width + self.x) / 2, (self.window_height + self.y) / 2
+        '''Return the coordinates for the center of the widget'''
+    	return ((self.window_width + self.x) / 2,
+                (self.window_height + self.y) / 2)
 
-    def expose(self, widget, event):
+    def _on_expose_event(self, widget, event):
+        '''Event called for every re-draw'''
         self.context = widget.window.cairo_create()
         self.rect = self.get_allocation()
 
@@ -81,10 +91,11 @@ class Grid(Gtk.DrawingArea):
                                self.window_width, self.window_height)
         self.context.clip()
 
-        self.draw(self.context)
+        self._draw(self.context)
         return False
 
     def _draw_value(self, context):
+        '''Draw the text on the item'''
     	text = str(self.value)
     	m1, m2 = self._center
 
@@ -106,6 +117,7 @@ class Grid(Gtk.DrawingArea):
                                     inset = 0,
                                     fill = False,
                                     stroke = True):
+        '''Draw the box around the text. Can be filled with a colour'''
         m1, m2 = self._center
         width = self.width / 1.05 #magic number.
 
@@ -128,16 +140,17 @@ class Grid(Gtk.DrawingArea):
         context.restore()
 
 
-    def draw(self, context):
+    def _draw(self, context):
+        '''Call the draw methods'''
         self._draw_square(context, fill=True, stroke=True)
         self._draw_value(context)
 
 if __name__ == '__main__':
     window = Gtk.Window()
-    grid = Grid()
-    grid.value = 0
+    item = NdukoItem()
+    item.value = 0
     
-    window.add(grid)
+    window.add(item)
     window.connect('destroy', Gtk.main_quit)
     window.show_all()
     
