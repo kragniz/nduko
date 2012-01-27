@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import widgets
 
 try:
     import gi
@@ -15,8 +16,14 @@ class gui(object):
         builder.add_from_file(gladeFile)
         builder.connect_signals(self)
 
+        self.item = widgets.NdukoItem()
+
         #get some widgets in the local namespace
         self.aboutdialog = builder.get_object('aboutdialog')
+        self.viewport = builder.get_object('viewport')
+        self.viewport.add(self.item)
+
+        self.item.show()
 
     def on_undoButton_clicked(self, widget):
     	self.undo()

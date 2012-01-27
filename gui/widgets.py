@@ -28,11 +28,13 @@ class NdukoItem(Gtk.DrawingArea):
         self._selected = False
 
     def _on_button_press(self, widget, event):
-        button = event.button 
+        button = event.button
         if button == 1:
             self.value += 1
+            self.selected = True
         else:
             self.value -= 1
+            self.selected = False
         self.queue_draw_area(self.x,
                              self.y,
                              self.window_width,
@@ -81,6 +83,14 @@ class NdukoItem(Gtk.DrawingArea):
     	return ((self.window_width + self.x) / 2,
                 (self.window_height + self.y) / 2)
 
+    @property
+    def selected(self):
+        return self._selected
+
+    @selected.setter
+    def selected(self, value):
+        self._selected = value
+
     def _on_expose_event(self, widget, event):
         '''Event called for every re-draw'''
         self.context = widget.window.cairo_create()
@@ -96,11 +106,11 @@ class NdukoItem(Gtk.DrawingArea):
 
     def _draw_value(self, context):
         '''Draw the text on the item'''
-    	text = str(self.value)
-    	m1, m2 = self._center
+        text = str(self.value)
+        m1, m2 = self._center
 
-    	context.set_font_size(self.width/2)
-    	context.select_font_face('', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+        context.set_font_size(self.width/2)
+        context.select_font_face('', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 
         (x, y, width, height, dx, dy) = context.text_extents(text)
         context.move_to(m1-dx/2, m2+height/2)
@@ -127,7 +137,7 @@ class NdukoItem(Gtk.DrawingArea):
                           width-inset*2)
 
         context.set_line_width(self.width/20)
-        if fill:
+        if fill or self.selected:
             context.set_source_rgba(*fillColor)
             context.fill_preserve()
         if stroke:
@@ -142,7 +152,7 @@ class NdukoItem(Gtk.DrawingArea):
 
     def _draw(self, context):
         '''Call the draw methods'''
-        self._draw_square(context, fill=True, stroke=True)
+        self._draw_square(context, fill=False, stroke=True)
         self._draw_value(context)
 
 if __name__ == '__main__':
