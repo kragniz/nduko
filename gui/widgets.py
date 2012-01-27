@@ -28,6 +28,7 @@ class NdukoItem(Gtk.DrawingArea):
         self._selected = False
 
     def _on_button_press(self, widget, event):
+        '''Event called whenever a mouse button is pressed on this widget'''
         button = event.button
         if button == 1:
             self.value += 1
@@ -46,10 +47,12 @@ class NdukoItem(Gtk.DrawingArea):
 
     @property
     def window_width(self):
+        '''Width of the drawable window'''
         return self.rect.width
 
     @property
     def window_height(self):
+        '''Height of the drawable window'''
     	return self.rect.height
 
     @property
@@ -156,6 +159,7 @@ class NdukoItem(Gtk.DrawingArea):
         self._draw_value(context)
 
 if __name__ == '__main__':
+    '''Do a bit of self testing'''
     window = Gtk.Window()
     item = NdukoItem()
     item.value = 0
