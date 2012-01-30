@@ -107,6 +107,7 @@
           <object class="GtkHButtonBox" id="hbuttonbox">
             <property name="visible">True</property>
             <property name="spacing">4</property>
+            <property name="homogeneous">True</property>
             <property name="layout_style">start</property>
             <child>
               <object class="GtkButton" id="undoButton">
@@ -149,6 +150,7 @@
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">3</property>
+                <property name="secondary">True</property>
               </packing>
             </child>
           </object>
