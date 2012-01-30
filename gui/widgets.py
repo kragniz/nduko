@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import math
-import cairo 
+import sys
+import cairo
 try:
     import gi
     from gi.repository import Gtk
@@ -9,11 +10,22 @@ except:
     #make gtk2 look like gtk3
     import gtk as Gtk
 
+class NdukoGrid(Gtk.Table):
+    '''A square grid of size n^2 containing NdukoItems'''
+    def __init__(self, n):
+        super(NdukoGrid,self).__init__()
+        self._items = []
+        for x in range(n):
+            for y in range(n):
+                self._items += [NdukoItem()]
+                self.attach(self._items[-1], x, x+1, y, y+1)
+                print x, y
+
 class NdukoItem(Gtk.DrawingArea):
     '''Class to draw a single item in an nduko grid. Holds and can change a
     single value'''
     def __init__(self):
-        Gtk.DrawingArea.__init__(self)
+        super(NdukoItem,self).__init__() 
         self.set_events(Gtk.gdk.BUTTON_PRESS_MASK
                       | Gtk.gdk.POINTER_MOTION_MASK)
         self.set_size_request(19, 19)
@@ -30,6 +42,7 @@ class NdukoItem(Gtk.DrawingArea):
     def _on_button_press(self, widget, event):
         '''Event called whenever a mouse button is pressed on this widget'''
         button = event.button
+        print event.x, event.y
         if button == 1:
             self.value += 1
             self.selected = True
@@ -160,12 +173,22 @@ class NdukoItem(Gtk.DrawingArea):
 
 if __name__ == '__main__':
     '''Do a bit of self testing'''
-    window = Gtk.Window()
-    item = NdukoItem()
-    item.value = 0
-    
-    window.add(item)
-    window.connect('destroy', Gtk.main_quit)
-    window.show_all()
-    
-    Gtk.main()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'NdukoGrid':
+            window = Gtk.Window()
+            grid = NdukoGrid(3)
+            
+            window.add(grid)
+            window.connect('destroy', Gtk.main_quit)
+            window.show_all()
+            Gtk.main()
+    else:
+        window = Gtk.Window()
+        item = NdukoItem()
+        item.value = 0
+        
+        window.add(item)
+        window.connect('destroy', Gtk.main_quit)
+        window.show_all()
+        
+        Gtk.main()

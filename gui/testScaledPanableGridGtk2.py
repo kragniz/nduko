@@ -20,7 +20,6 @@ class gui(object):
         print 'dying'
         sys.exit()
 
-
 if __name__ == '__main__':
 	g = gui()
 	Gtk.main()
