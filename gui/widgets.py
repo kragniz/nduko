@@ -6,9 +6,11 @@ import cairo
 try:
     import gi
     from gi.repository import Gtk
+    import Gtk.Gdk as Gdk
 except:
     #make gtk2 look like gtk3
     import gtk as Gtk
+    import Gtk.gdk as Gdk
 
 class NdukoGrid(Gtk.Table):
     '''A square grid of size n^2 containing NdukoItems'''
@@ -20,14 +22,15 @@ class NdukoGrid(Gtk.Table):
                 self._items += [NdukoItem()]
                 self.attach(self._items[-1], x, x+1, y, y+1)
                 print x, y
+                
 
 class NdukoItem(Gtk.DrawingArea):
     '''Class to draw a single item in an nduko grid. Holds and can change a
     single value'''
     def __init__(self):
         super(NdukoItem,self).__init__() 
-        self.set_events(Gtk.gdk.BUTTON_PRESS_MASK
-                      | Gtk.gdk.POINTER_MOTION_MASK)
+        self.set_events(Gdk.BUTTON_PRESS_MASK
+                      | Gdk.POINTER_MOTION_MASK)
         self.set_size_request(19, 19)
 
         self.connect('expose_event', self._on_expose_event)
