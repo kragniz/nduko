@@ -6,11 +6,9 @@ import cairo
 try:
     import gi
     from gi.repository import Gtk
-    import Gtk.Gdk as Gdk
 except:
     #make gtk2 look like gtk3
     import gtk as Gtk
-    import Gtk.gdk as Gdk
 
 class NdukoGrid(Gtk.Table):
     '''A square grid of size n^2 containing NdukoItems'''
@@ -19,7 +17,7 @@ class NdukoGrid(Gtk.Table):
         self._items = []
         for x in range(n):
             for y in range(n):
-                self._items += [NdukoItem()]
+                self._items += [NdukoItem(x, y)]
                 self.attach(self._items[-1], x, x+1, y, y+1)
                 print x, y
                 
@@ -27,10 +25,10 @@ class NdukoGrid(Gtk.Table):
 class NdukoItem(Gtk.DrawingArea):
     '''Class to draw a single item in an nduko grid. Holds and can change a
     single value'''
-    def __init__(self):
+    def __init__(self, i=0, j=0):
         super(NdukoItem,self).__init__() 
-        self.set_events(Gdk.BUTTON_PRESS_MASK
-                      | Gdk.POINTER_MOTION_MASK)
+        self.set_events(Gtk.gdk.BUTTON_PRESS_MASK
+                      | Gtk.gdk.POINTER_MOTION_MASK)
         self.set_size_request(19, 19)
 
         self.connect('expose_event', self._on_expose_event)
@@ -42,6 +40,8 @@ class NdukoItem(Gtk.DrawingArea):
         self._value = 0
         self._selected = False
 
+        self.i, self.j = i, j
+
     def _on_button_press(self, widget, event):
         '''Event called whenever a mouse button is pressed on this widget'''
         button = event.button
@@ -52,10 +52,8 @@ class NdukoItem(Gtk.DrawingArea):
         else:
             self.value -= 1
             self.selected = False
-        self.queue_draw_area(self.x,
-                             self.y,
-                             self.window_width,
-                             self.window_height)
+        self.queue_draw_area(*self.rect)
+        print self.rect, self.i, self.j
         return True
 
     def _on_motion_notify_event(self, width, event):
@@ -179,7 +177,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1] == 'NdukoGrid':
             window = Gtk.Window()
-            grid = NdukoGrid(3)
+            grid = NdukoGrid(2)
             
             window.add(grid)
             window.connect('destroy', Gtk.main_quit)
