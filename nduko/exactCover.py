@@ -47,19 +47,14 @@ class ExactCover(object):
         '''Solve the exact cover problem'''
         #If the matrix is empty, the problem is solved; terminate
         #successfully.
-        print 'at place', 8
         if not self._matrix:
-            print 'at place', 9
             for c in self.coveredColumns:
-                print 'at place', 10
                 if not self.coveredColumns[c]:
-                    print 'at place', 11
                     return True
             print self
             return True
 
         else:
-            print 'at place', 1
             #otherwise choose a column c (deterministically)
             c = self.__chooseColumn()
             #choose a row r such that matrix(r, c) = 1
@@ -68,7 +63,6 @@ class ExactCover(object):
                 return False
 
             for r in rows:
-                print 'at place', 2
                 box = [] #a place for temporaly removed rows
                 #include row r in the partial solution, if a solution
                 #exists.
@@ -76,7 +70,6 @@ class ExactCover(object):
                 self.solution[k] = solution[1][1]
                 # Remove row r from matrix.
                 for node in solution:
-                    print 'at place', 3
                     box.append(node)
                     self._matrix.remove(node)
                     self.updates[k] = self.updates.get(k,0) + 1
@@ -84,7 +77,6 @@ class ExactCover(object):
                 #For each column j such that matrix(r, j) = 1,
                 cols = [node[1] for node in solution]
                 for j in cols:
-                    print 'at place', 4
                     self.coveredColumns[j] = True
                     #choose rows i such that matrix(i,j) = 1.
                     rows2 = [node[0] for node in self._matrix if node[1] == j]
@@ -96,9 +88,9 @@ class ExactCover(object):
                         self.updates[k] = self.updates.get(k,0) + 1
 
                 #do some recursion
-                print 'at place', 5
-                self.solve(k + 1)
-                print 'at place', 6
+                if self.solve(k + 1):
+                    #if this returns true, we have a solution, so terminate successfully
+                    return True
 
                 #restore deleted rows.
                 for node in box:
@@ -108,7 +100,6 @@ class ExactCover(object):
                 #uncover columns.
                 for j in cols:
                     self.coveredColumns[j] = False
-        print 'at place', 7
         return True
 
 if __name__ == '__main__':
