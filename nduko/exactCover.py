@@ -9,9 +9,8 @@ class ExactCover(object):
         self.updates = {}
 
     def __str__(self):
-        value = ''
-        for k in self.solution:
-            value += str(self.solution[k]) + '\n'
+        print self.solution
+        value = ' '.join(str(self.solution[k]) for k in self.solution)
         return value
 
     def load(self, filename):
