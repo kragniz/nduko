@@ -9,8 +9,8 @@ class ExactCover(object):
         self.updates = {}
 
     def __str__(self):
-        print self.solution
-        value = ' '.join(str(self.solution[k]) for k in self.solution)
+        print self.solution, self.updates, self.coveredColumns, self._matrix
+        value = ' '.join(str(self.updates[k]-1) for k in self.updates)
         return value
 
     def load(self, filename):
