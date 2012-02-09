@@ -67,7 +67,7 @@ class NdukoItem(Gtk.DrawingArea):
     @property
     def window_height(self):
         '''Height of the drawable window'''
-    	return self.rect.height
+        return self.rect.height
 
     @property
     def x(self):
@@ -82,22 +82,22 @@ class NdukoItem(Gtk.DrawingArea):
     @property
     def width(self):
         '''Return the width of the visable inner square'''
-    	return min(self.window_width, self.window_height)
+        return min(self.window_width, self.window_height)
 
     @property
     def value(self):
         '''Return the value of the item'''
-    	return self._value
+        return self._value
 
     @value.setter
     def value(self, value):
         '''Set the value for the items'''
-    	self._value = value
+        self._value = value
 
     @property
     def _center(self):
         '''Return the coordinates for the center of the widget'''
-    	return ((self.window_width + self.x) / 2,
+        return ((self.window_width + self.x) / 2,
                 (self.window_height + self.y) / 2)
 
     @property

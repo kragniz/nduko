@@ -26,27 +26,27 @@ class gui(object):
         self.item.show()
 
     def on_undoButton_clicked(self, widget):
-    	self.undo()
+        self.undo()
 
     def on_aboutMenuitem_activate(self, widget):
         self.aboutdialog.show()
 
     def on_quitmenuitem_activate(self, widget):
-    	self.quit()
+        self.quit()
 
     def on_window_destroy(self, widget):
-    	self.quit()
+        self.quit()
 
     def on_quitButton_clicked(self, widget):
-    	self.quit()
+        self.quit()
 
     def undo(self):
-    	print 'undone'
+        print 'undone'
 
     def quit(self, errorCode=0):
-    	print 'quitting with style'
-    	sys.exit(errorCode)
+        print 'quitting with style'
+        sys.exit(errorCode)
 
 if __name__ == '__main__':
-	g = gui()
-	Gtk.main()
+    g = gui()
+    Gtk.main()
