@@ -12,7 +12,7 @@ class GenerateNduko(object):
             for j in range(n**2):
                 self.output.write('{0} {1} {2}\n'.format(cellValue,
                                                      n**4 + (rowOffset * n**2 + (j % n**2)),
-                                                     2*(n**4) + (i % n**2)*n + j) )
+                                                     2*(n**4) + (n*i % n**n)*n + j) )
             cellValue += 1
             if (i+1) % (n**2) == 0:
                 rowOffset += 1
@@ -30,5 +30,5 @@ class GenerateNduko(object):
                     fileOut.write(''.join(line) + '\n')
 
 if __name__ == '__main__':
-    g = GenerateNduko(2)
+    g = GenerateNduko(3)
     g.writeViewable()
