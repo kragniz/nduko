@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import sys, os
-
 class GenerateNduko(object):
     def __init__(self, n):
         self.n = n
@@ -12,8 +10,9 @@ class GenerateNduko(object):
 
         for i in range(n**4):
             for j in range(n**2):
-                self.output.write('{0} {1}\n'.format(cellValue,
-                                                     n**4 + (rowOffset * n**2 + (j % n**2))))
+                self.output.write('{0} {1} {2}\n'.format(cellValue,
+                                                     n**4 + (rowOffset * n**2 + (j % n**2)),
+                                                     2*(n**4) + (i % n**2)*n + j) )
             cellValue += 1
             if (i+1) % (n**2) == 0:
                 rowOffset += 1
@@ -24,9 +23,10 @@ class GenerateNduko(object):
             with open('../data/generatedNduko') as fileIn:
                 for line in range(self.n**6):
                     line = ['-' for i in range((self.n**4)*4)]
-                    cell, row = fileIn.readline()[:-1].split()
+                    cell, row, column = fileIn.readline()[:-1].split()
                     line[int(cell)] = '1'
                     line[int(row)] = '1'
+                    line[int(column)] = '1'
                     fileOut.write(''.join(line) + '\n')
 
 if __name__ == '__main__':

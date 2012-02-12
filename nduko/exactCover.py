@@ -1,5 +1,4 @@
-#!/usr/bin/python -O
-#import pprint as pp
+#!/usr/bin/env python
 
 class ExactCover(object):
     def __init__(self):
