@@ -3,7 +3,7 @@
 class GenerateNduko(object):
     def __init__(self, n):
         self.n = n
-        self.output = open('../data/generatedNduko', 'w')
+        self.output = open('../data/nduko', 'w')
 
         cellValue = 0
         rowOffset = 0
@@ -20,7 +20,7 @@ class GenerateNduko(object):
 
     def writeViewable(self):
         with open('../data/viewableNduko', 'w') as fileOut:
-            with open('../data/generatedNduko') as fileIn:
+            with open('../data/nduko') as fileIn:
                 for line in range(self.n**6):
                     line = ['-' for i in range((self.n**4)*4)]
                     cell, row, column = fileIn.readline()[:-1].split()

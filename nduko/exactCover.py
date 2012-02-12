@@ -101,7 +101,7 @@ class ExactCover(object):
 
 if __name__ == '__main__':
     X = ExactCover()
-    X.load('../data/generatedNduko')
+    X.load('../data/nduko')
     try:
         print X.solve(0)
     except RuntimeError:
