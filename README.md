@@ -1,12 +1,28 @@
 About
 =====
 
-Nduko is currently a n*n suduko solver.
+Nduko is a variant of Sudoku in which the game takes place on an n*n grid.
+
+An Nduko puzzle looks a little like this:
+
+      n 
+    <--->
+    -----------------  X
+    |   |   |   |   |  | 
+    -----------------  |
+    |   |   |   |   |  | 
+    -----------------  n
+    |   |   |   |   |  |
+    -----------------  |
+    |   |   |   |   |  |
+    -----------------  X
+
+The grid is divided into n*n subsections. Each subsection is itself divided into n*n sections. In the example above, n = 4
 
 Todo
 ====
 
-Pretty much everything.
+Pretty much everything except exact cover solving.
 
 Hacking
 =======
