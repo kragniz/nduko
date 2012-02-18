@@ -8,26 +8,48 @@ class GenerateNduko(object):
         cellValue = 0
         rowOffset = 0
 
+        x, bi, bj, minx = 0, 0, 0, 0
+
         for i in range(n**4):
             for j in range(n**2):
-                self.output.write('{0} {1} {2}\n'.format(cellValue,
+                self.output.write('{0} {1} {2} {3}\n'.format(cellValue,
                                                      n**4 + (rowOffset * n**2 + (j % n**2)),
-                                                     2*(n**4) + (n*i % n**3)*n + j) )
+                                                     2*(n**4) + (n*i % n**3)*n + j,
+                                                     3*(n**4) + x*n**2 + j))
             cellValue += 1
             if (i+1) % (n**2) == 0:
                 rowOffset += 1
+
+            if bi % n == 0:
+                x += 1
+                if x % n == 0:
+                    x = minx
+                    bj += 1
+                    if bj % n == 0:
+                        print minx
+                        minx += 1
+
+            bi += 1
+            
+
         self.output.close()
 
     def writeViewable(self):
+        s = self.n**4
         with open('../data/viewableNduko', 'w') as fileOut:
             with open('../data/nduko') as fileIn:
                 for line in range(self.n**6):
                     line = ['-' for i in range((self.n**4)*4)]
-                    cell, row, column = fileIn.readline()[:-1].split()
+                    cell, row, column, block = fileIn.readline()[:-1].split()
                     line[int(cell)] = '1'
                     line[int(row)] = '1'
                     line[int(column)] = '1'
-                    fileOut.write(''.join(line) + '\n')
+                    line[int(block)] = '1'
+                    line = ''.join(line)
+                    fileOut.write(line[:s] + '|' + 
+                                  line[s:2*s] + '|' +
+                                  line[2*s:3*s] + '|' +
+                                  line[3*s:] +'\n')
 
 if __name__ == '__main__':
     g = GenerateNduko(3)
