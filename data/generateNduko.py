@@ -8,7 +8,7 @@ class GenerateNduko(object):
         cellValue = 0
         rowOffset = 0
 
-        x, bi, bj, minx = 0, 0, 0, 0
+        x, minx, bi, bj = 0, 0, 1, 1
 
         for i in range(n**4):
             for j in range(n**2):
@@ -20,17 +20,14 @@ class GenerateNduko(object):
             if (i+1) % (n**2) == 0:
                 rowOffset += 1
 
-            if bi % n == 0:
+            if not bi % n:
                 x += 1
-                if x % n == 0:
+                if not x % n:
                     x = minx
                     bj += 1
-                    if bj % n == 0:
-                        print minx
-                        minx += 1
-
+                    if not bj % n:
+                        minx += n
             bi += 1
-            
 
         self.output.close()
 
@@ -52,5 +49,5 @@ class GenerateNduko(object):
                                   line[3*s:] +'\n')
 
 if __name__ == '__main__':
-    g = GenerateNduko(3)
+    g = GenerateNduko(2)
     g.writeViewable()
