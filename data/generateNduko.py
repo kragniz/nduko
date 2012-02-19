@@ -13,10 +13,9 @@ class GenerateNduko(object):
         for i in range(n**4):
             for j in range(n**2):
                 self.output.write('{0} {1} {2} {3}\n'.format(cellValue,
-                                                     n**4 + (rowOffset * n**2 + (j % n**2)),
-                                                     2*(n**4) + (n*i % n**3)*n + j,
-                                                     3*(n**4) + x*n**2 + j))
-            cellValue += 1
+                                                        n**4  + (rowOffset * n**2 + (j % n**2)),
+                                                     2*(n**4) + (n*i % n**3)*n    +  j,
+                                                     3*(n**4) +  x*n**2           +  j))
             if (i+1) % (n**2) == 0:
                 rowOffset += 1
 
@@ -27,26 +26,30 @@ class GenerateNduko(object):
                     bj += 1
                     if not bj % n:
                         minx += n
+            cellValue += 1
             bi += 1
 
         self.output.close()
 
     def writeViewable(self):
         s = self.n**4
+        n = 0
         with open('../data/viewableNduko', 'w') as fileOut:
             with open('../data/nduko') as fileIn:
                 for line in range(self.n**6):
+                    c = str(n % self.n**2 + 1)
                     line = ['-' for i in range((self.n**4)*4)]
                     cell, row, column, block = fileIn.readline()[:-1].split()
-                    line[int(cell)] = '1'
-                    line[int(row)] = '1'
-                    line[int(column)] = '1'
-                    line[int(block)] = '1'
+                    line[int(cell)] = c
+                    line[int(row)] = c
+                    line[int(column)] = c
+                    line[int(block)] = c
                     line = ''.join(line)
                     fileOut.write(line[:s] + '|' + 
                                   line[s:2*s] + '|' +
                                   line[2*s:3*s] + '|' +
                                   line[3*s:] +'\n')
+                    n += 1
 
 if __name__ == '__main__':
     g = GenerateNduko(2)
