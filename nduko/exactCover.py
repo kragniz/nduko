@@ -4,11 +4,12 @@ class ExactCover(object):
     def __init__(self):
         self._matrix = []
         self._solution = {}
-        self._coveredColumns = {}
+        # self.coveredColumns = {}
         self._updates = {}
 
     def __str__(self):
-        value = ' '.join(str(self._updates[k]) for k in self._updates)
+        value = ' '.join(str(self._solution[k]-1) for k in self._solution)
+        print self._updates
         return value
 
     def load(self, filename):
@@ -21,12 +22,9 @@ class ExactCover(object):
                 for col in line.split():
                     self._matrix.append((row, int(col)))
 
-        for (r, c) in self._matrix:
-            self._coveredColumns[c] = False
-
-    def __chooseColumn(self):
+    def __chooseColumn(self, columns):
         '''Return the column with the smallest number of rows which is uncoverd'''
-        columns = [c for c in self._coveredColumns if not self._coveredColumns[c]]
+        columns = [c for c in columns if not columns[c]]
 
         # columns may possibly have no rows
         tmp = dict([(c, 0) for c in columns])
@@ -40,20 +38,37 @@ class ExactCover(object):
                 minColumn = c
         return minColumn
 
-    def solve(self, k=0):
+    def solve(self, k=0, columns={}, rows={}):
         '''Solve the exact cover problem'''
+        if not columns:
+            coveredColumns = {}
+            for (r, c) in self._matrix:
+                coveredColumns[c] = False
+        else:
+            coveredColumns = columns
+
+        if not rows:
+            coveredRows = {}
+            for (r, c) in self._matrix:
+                coveredRows[r] = False
+        else:
+            coveredRows = columns
+
         #If the matrix is empty, the problem is solved; terminate
         #successfully.
         if not self._matrix:
-            for c in self._coveredColumns:
-                if not self._coveredColumns[c]:
-                    return True
+            for c in coveredColumns:
+                if not coveredColumns[c]:
+                    return False
             print self
-            return True
+            return False
 
         else:
             #otherwise choose a column c (deterministically)
-            c = self.__chooseColumn()
+            c = self.__chooseColumn(coveredColumns)
+            print c
+            # if 1 not in c:
+            #     return False
             #choose a row r such that matrix(r, c) = 1
             rows = [node[0] for node in self._matrix if node[1]==c]
             if not rows:
@@ -74,7 +89,7 @@ class ExactCover(object):
                 #For each column j such that matrix(r, j) = 1,
                 cols = [node[1] for node in solution]
                 for j in cols:
-                    self._coveredColumns[j] = True
+                    coveredColumns[j] = True
                     #choose rows i such that matrix(i,j) = 1.
                     rows2 = [node[0] for node in self._matrix if node[1] == j]
                     #delete row i from matrix
@@ -85,7 +100,7 @@ class ExactCover(object):
                         self._updates[k] = self._updates.get(k,0) + 1
 
                 #do some recursion
-                if self.solve(k + 1):
+                if self.solve(k + 1, coveredColumns, coveredRows):
                     #if this returns true, we have a solution, so terminate successfully
                     return True
 
@@ -96,7 +111,7 @@ class ExactCover(object):
                 del self._solution[k]
                 #uncover columns.
                 for j in cols:
-                    self._coveredColumns[j] = False
+                    coveredColumns[j] = False
         return True
 
 if __name__ == '__main__':
