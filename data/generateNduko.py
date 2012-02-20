@@ -34,6 +34,7 @@ class GenerateNduko(object):
     def writeViewable(self):
         s = self.n**4
         n = 0
+        _r, _c = 1, 1
         with open('../data/viewableNduko', 'w') as fileOut:
             with open('../data/nduko') as fileIn:
                 for line in range(self.n**6):
@@ -45,11 +46,17 @@ class GenerateNduko(object):
                     line[int(column)] = c
                     line[int(block)] = c
                     line = ''.join(line)
-                    fileOut.write(line[:s] + '|' + 
+                    fileOut.write('r{0}c{1}#{2} '.format(_r, _c, c) +
+                                  line[:s] + '|' + 
                                   line[s:2*s] + '|' +
                                   line[2*s:3*s] + '|' +
                                   line[3*s:] +'\n')
                     n += 1
+                    if not n % self.n**2:
+                        if not _c % self.n**2:
+                            _c = 0
+                            _r += 1
+                        _c += 1
 
 if __name__ == '__main__':
     g = GenerateNduko(2)

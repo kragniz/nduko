@@ -8,7 +8,7 @@ class ExactCover(object):
         self._updates = {}
 
     def __str__(self):
-        value = ' '.join(str(self._updates[k]-1) for k in self._updates)
+        value = ' '.join(str(self._updates[k]) for k in self._updates)
         return value
 
     def load(self, filename):

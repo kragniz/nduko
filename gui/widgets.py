@@ -3,12 +3,8 @@
 import math
 import sys
 import cairo
-try:
-    import gi
-    from gi.repository import Gtk
-except:
-    #make gtk2 look like gtk3
-    import gtk as Gtk
+
+import gtk as Gtk
 
 class NdukoGrid(Gtk.Table):
     '''A square grid of size n^2 containing NdukoItems'''
@@ -97,8 +93,8 @@ class NdukoItem(Gtk.DrawingArea):
     @property
     def _center(self):
         '''Return the coordinates for the center of the widget'''
-        return ((self.window_width + self.x) / 2,
-                (self.window_height + self.y) / 2)
+        return ((self.window_width - self.x) / 2,
+                (self.window_height - self.y) / 2)
 
     @property
     def selected(self):
@@ -114,7 +110,7 @@ class NdukoItem(Gtk.DrawingArea):
         self.rect = self.get_allocation()
 
         # speed up by setting a clip region for the expose event
-        self.context.rectangle(self.x, self.y,
+        self.context.rectangle(self.rect.x, self.y,
                                self.window_width, self.window_height)
         self.context.clip()
 
